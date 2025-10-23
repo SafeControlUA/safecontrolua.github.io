@@ -1,90 +1,244 @@
 <!doctype html>
 <html lang="uk">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>SafeControl | Безпека малого бізнесу</title>
-  <style>
-    body { margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto; line-height:1.55; background:#f8fafc; color:#111 }
-    header { padding:32px; background:#0f172a; color:#fff; text-align:center }
-    nav a { color:#fff; margin:0 14px; text-decoration:none; font-weight:600 }
-    .container { max-width:980px; margin:0 auto; padding:24px }
-    .card { background:#fff; border:1px solid #e2e8f0; border-radius:14px; padding:20px; margin:18px 0 }
-    h1,h2 { margin-top:0 }
-    footer { background:#0f172a; color:#fff; padding:24px; text-align:center; font-size:0.9em }
-    .btn { display:inline-block; background:#22c55e; color:#fff; padding:10px 16px; border-radius:8px; text-decoration:none }
-    .btn:hover { background:#16a34a }
-    .warn { background:#fff7ed; border-color:#fed7aa }
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>SafeControl | Панель</title>
+<style>
+  :root{
+    --bg:#0b1220;          /* фон */
+    --panel:#0f172a;       /* колір лівої панелі */
+    --card:#0e1a33;        /* карточки */
+    --text:#e5e7eb;        /* звичайний текст */
+    --muted:#9ca3af;
+    --accent:#22c55e;      /* акцентні кнопки */
+    --accent-2:#f97316;    /* додатковий акцент */
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
+    color:var(--text);
+    background:
+      radial-gradient(60vmax 60vmax at 10% 10%, #193156 0%, transparent 60%),
+      radial-gradient(50vmax 50vmax at 80% 20%, #1a3a2a 0%, transparent 60%),
+      radial-gradient(70vmax 70vmax at 50% 90%, #2a233a 0%, transparent 60%),
+      var(--bg);
+  }
+  a{color:inherit;text-decoration:none}
+  /* ===== Ліва панель ===== */
+  .layout{display:grid; grid-template-columns:260px 1fr; min-height:100%}
+  aside{
+    background:var(--panel);
+    border-right:1px solid rgba(255,255,255,.08);
+    position:sticky; top:0; height:100vh; padding:20px 14px;
+  }
+  .brand{display:flex; align-items:center; gap:10px; margin-bottom:16px}
+  .logo{width:36px; height:36px; border:2px solid var(--accent); border-radius:10px;
+        display:grid; place-items:center; font-weight:800}
+  .brand h1{font-size:18px; margin:0}
+  .menu{display:grid; gap:8px; margin-top:10px}
+  .menu a{
+    padding:10px 12px; border-radius:10px; border:1px solid rgba(255,255,255,.08);
+    background:linear-gradient(180deg, rgba(255,255,255,.04), transparent);
+  }
+  .menu a:hover{border-color:rgba(255,255,255,.25)}
+  .pill{display:inline-block; font-size:12px; color:#051; background:#aff4c6; color:#062; padding:2px 8px; border-radius:999px}
+  /* ===== Контент ===== */
+  main{padding:24px; max-width:1160px}
+  .card{
+    background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+    border:1px solid rgba(255,255,255,.1);
+    border-radius:16px; padding:18px; margin:14px 0;
+  }
+  .row{display:grid; gap:16px}
+  @media(min-width:900px){ .row-2{grid-template-columns:1fr 1fr} .row-3{grid-template-columns:1fr 1fr 1fr} }
+  h2{margin:6px 0 10px}
+  .btn{display:inline-block; padding:10px 14px; border-radius:10px; border:1px solid rgba(255,255,255,.2)}
+  .btn.accent{background:var(--accent); color:#041407; border:none}
+  .muted{color:var(--muted)}
+  /* таблиця/форма */
+  label{display:block; margin:8px 0 4px}
+  input,textarea,select{
+    width:100%; padding:10px 12px; border-radius:10px; border:1px solid rgba(255,255,255,.2);
+    background:#0b1530; color:var(--text)
+  }
+  /* Галерея */
+  .gallery{display:grid; gap:10px}
+  @media(min-width:900px){ .gallery{grid-template-columns:1fr 1fr 1fr} }
+  .gallery img{width:100%; height:200px; object-fit:cover; border-radius:12px; border:1px solid rgba(255,255,255,.1)}
+  /* Мобільне меню */
+  .topbar{display:none}
+  @media(max-width:900px){
+    .layout{grid-template-columns:1fr}
+    aside{position:fixed; left:0; top:56px; height:calc(100vh - 56px); width:240px; transform:translateX(-110%); transition:.25s}
+    aside.open{transform:translateX(0)}
+    .topbar{display:flex; align-items:center; gap:10px; padding:10px 14px; background:var(--panel); border-bottom:1px solid rgba(255,255,255,.08); position:sticky; top:0; z-index:10}
+    .burger{width:36px; height:36px; border:1px solid rgba(255,255,255,.2); border-radius:8px; display:grid; place-items:center; font-size:22px}
+    main{padding-top:12px}
+  }
+</style>
 </head>
 <body>
-  <header>
-    <h1>SafeControl</h1>
-    <p>Система довіри та контролю для малого бізнесу</p>
-    <nav>
-      <a href="#about">Про нас</a>
-      <a href="#check">Чек-листи</a>
-      <a href="#calc">Калькулятор втрат</a>
-      <a href="#contact">Контакти</a>
+
+<!-- Мобільна шапка -->
+<div class="topbar">
+  <button class="burger" id="burger">☰</button>
+  <div class="brand"><div class="logo">SC</div><h1>SafeControl</h1></div>
+</div>
+
+<div class="layout">
+  <!-- Ліва панель -->
+  <aside id="sidebar">
+    <div class="brand">
+      <div class="logo">SC</div>
+      <h1>SafeControl</h1>
+    </div>
+    <div class="muted" style="font-size:13px;margin-bottom:12px">Контроль, довіра, результат.</div>
+
+    <nav class="menu">
+      <a href="#home">🏠 Головна</a>
+      <a href="#solutions">🧰 Рішення</a>
+      <a href="#checklists">✅ Чек-листи</a>
+      <a href="#calculator">🧮 Калькулятор</a>
+      <a href="#forms">📝 Форми</a>
+      <a href="#gallery">🖼️ Галерея</a>
+      <a href="#contacts">📞 Контакти</a>
     </nav>
-  </header>
 
-  <main class="container">
-    <section class="card" id="about">
-      <h2>Що таке SafeControl</h2>
-      <p><strong>SafeControl</strong> — це простий набір рішень для власників СТО, сервісів та малих підприємств, які хочуть контролювати фінанси, працівників і запобігати “лівим” заробіткам.</p>
+    <div style="margin-top:14px">
+      <span class="pill">beta</span>
+    </div>
+  </aside>
+
+  <!-- Контент -->
+  <main>
+    <!-- Головна -->
+    <section id="home" class="card">
+      <h2>Ласкаво просимо до SafeControl</h2>
+      <p>Платформа швидкого контролю для СТО та малого бізнесу: фіксація робіт, перевірки, аналітика втрат.</p>
+      <div class="row row-2">
+        <div class="card">
+          <h3>Швидкий старт</h3>
+          <ol>
+            <li>Усі роботи — лише через Job Card</li>
+            <li>Фото “до/після” + чек клієнту</li>
+            <li>Звірка каси щодня</li>
+          </ol>
+          <a class="btn accent" href="#checklists">Перейти до чек-листів</a>
+        </div>
+        <div class="card">
+          <h3>Політика спостереження</h3>
+          <p class="muted">На території ведеться відеоспостереження у робочих зонах. Порушення правил праці та крадіжка матеріалів тягнуть відповідальність.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Рішення -->
+    <section id="solutions" class="card">
+      <h2>Рішення SafeControl</h2>
+      <div class="row row-3">
+        <div class="card">
+          <h3>Job Card</h3>
+          <p>Онлайн-форма фіксації робіт (VIN, фото, підпис клієнта).</p>
+          <a class="btn" href="#forms">Відкрити</a>
+        </div>
+        <div class="card">
+          <h3>Облік запчастин</h3>
+          <p>Видача під підпис, швидка інвентаризація, звірка зі справами.</p>
+        </div>
+        <div class="card">
+          <h3>Контрольні дзвінки</h3>
+          <p>Скрипти та журнал зворотного зв’язку клієнта.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Чек-листи -->
+    <section id="checklists" class="card">
+      <h2>Чек-листи</h2>
       <ul>
-        <li>Онлайн Job Card для фіксації робіт</li>
-        <li>Калькулятор потенційних втрат</li>
-        <li>Анонімна форма повідомлень</li>
-        <li>Фото- і відеоконтроль процесів</li>
+        <li>Квитанція клієнту <b>до</b> початку робіт</li>
+        <li>Фото “до/після” у спільну папку</li>
+        <li>Job Card: час, роботи, підписи</li>
+        <li>Каса дня = Job Card сумарно</li>
+        <li>Камери: каса / склад / бокси</li>
       </ul>
     </section>
 
-    <section class="card" id="check">
-      <h2>Швидкий чек-лист безпеки</h2>
-      <ul>
-        <li>Кожна робота — через Job Card з VIN, фото і підписом клієнта</li>
-        <li>Фото “до/після” ремонту — обов’язково</li>
-        <li>Квитанція клієнту до початку робіт</li>
-        <li>Звірка каси з журналом робіт наприкінці дня</li>
-        <li>Камери на касу, склад і робочі зони</li>
-      </ul>
-    </section>
-
-    <section class="card warn" id="calc">
+    <!-- Калькулятор -->
+    <section id="calculator" class="card">
       <h2>Калькулятор можливих втрат</h2>
-      <p>Введи приблизні показники, щоб побачити, скільки бізнес може втрачати щомісяця.</p>
-      <label>Кількість авто/день: <input id="cars" type="number" value="5" min="0"></label><br>
-      <label>Середній чек (₴): <input id="avg" type="number" value="1500" min="0"></label><br>
-      <label>“Ліваку”, %: <input id="pct" type="number" value="10" min="0" max="100"></label><br><br>
-      <button class="btn" onclick="calc()">Порахувати</button>
-      <div id="out" style="margin-top:15px;"></div>
+      <div class="row row-2">
+        <div class="card">
+          <label>Авто/день</label>
+          <input id="cars" type="number" value="6" min="0">
+          <label>Середній чек, ₴</label>
+          <input id="avg" type="number" value="1800" min="0">
+          <label>“Ліваку”, %</label>
+          <input id="pct" type="number" value="15" min="0" max="100">
+          <div style="margin-top:10px">
+            <button class="btn accent" onclick="calc()">Порахувати</button>
+          </div>
+        </div>
+        <div class="card" id="out">
+          <p class="muted">Результат буде тут.</p>
+        </div>
+      </div>
     </section>
 
-    <section class="card" id="contact">
+    <!-- Форми -->
+    <section id="forms" class="card">
+      <h2>Форми</h2>
+      <p>Сюди вставиш свою Google Form (Job Card / Анонімне повідомлення). Заміни посилання нижче на своє.</p>
+      <div class="card" style="overflow:hidden">
+        <iframe src="https://docs.google.com/forms/d/e/example/viewform?embedded=true"
+                width="100%" height="520" frameborder="0">Завантаження…</iframe>
+      </div>
+    </section>
+
+    <!-- Галерея -->
+    <section id="gallery" class="card">
+      <h2>Галерея</h2>
+      <p class="muted">Картинки тягни у папку <code>/img</code> та заміни посилання нижче.</p>
+      <div class="gallery">
+        <img src="img/photo1.jpg" alt="work 1">
+        <img src="img/photo2.jpg" alt="work 2">
+        <img src="img/photo3.jpg" alt="work 3">
+      </div>
+    </section>
+
+    <!-- Контакти -->
+    <section id="contacts" class="card">
       <h2>Контакти</h2>
-      <p>📧 <a href="mailto:safecontrol.ua@gmail.com">safecontrol.ua@gmail.com</a></p>
+      <p>Email: <a href="mailto:safecontrol.ua@gmail.com">safecontrol.ua@gmail.com</a></p>
       <p>Telegram: <a href="https://t.me/">@SafeControl</a></p>
-      <p>© 2025 SafeControl. Усі права захищені.</p>
+      <p class="muted">© <span id="y"></span> SafeControl</p>
     </section>
   </main>
+</div>
 
-  <footer>
-    <p>SafeControl — Контроль, довіра, результат.</p>
-  </footer>
+<script>
+  // мобільне меню
+  const burger = document.getElementById('burger');
+  const sidebar = document.getElementById('sidebar');
+  if(burger){ burger.onclick = ()=> sidebar.classList.toggle('open'); }
 
-  <script>
-    function calc(){
-      const cars = +document.getElementById('cars').value||0;
-      const avg = +document.getElementById('avg').value||0;
-      const pct = (+document.getElementById('pct').value||0)/100;
-      const lossDay = cars*avg*pct;
-      const lossMonth = lossDay*26;
-      document.getElementById('out').innerHTML =
-        "<b>Втрати/день:</b> " + Math.round(lossDay).toLocaleString('uk-UA') + " ₴<br>" +
-        "<b>Втрати/місяць:</b> " + Math.round(lossMonth).toLocaleString('uk-UA') + " ₴";
-    }
-  </script>
+  // калькулятор
+  function calc(){
+    const cars = +document.getElementById('cars').value||0;
+    const avg  = +document.getElementById('avg').value||0;
+    const pct  = (+document.getElementById('pct').value||0)/100;
+    const lossDay = cars*avg*pct;
+    const lossMonth = lossDay*26;
+    const fmt = n => Math.round(n).toLocaleString('uk-UA');
+    document.getElementById('out').innerHTML =
+      "<h3>Оцінка втрат</h3>" +
+      "<p><b>За день:</b> " + fmt(lossDay) + " ₴<br>" +
+      "<b>За місяць (26 роб. днів):</b> " + fmt(lossMonth) + " ₴</p>";
+  }
+  // рік у футері
+  document.getElementById('y').textContent = new Date().getFullYear();
+</script>
 </body>
 </html>

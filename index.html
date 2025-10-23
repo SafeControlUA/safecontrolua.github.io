@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SafeControl | Безпека малого бізнесу</title>
+  <style>
+    body { margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto; line-height:1.55; background:#f8fafc; color:#111 }
+    header { padding:32px; background:#0f172a; color:#fff; text-align:center }
+    nav a { color:#fff; margin:0 14px; text-decoration:none; font-weight:600 }
+    .container { max-width:980px; margin:0 auto; padding:24px }
+    .card { background:#fff; border:1px solid #e2e8f0; border-radius:14px; padding:20px; margin:18px 0 }
+    h1,h2 { margin-top:0 }
+    footer { background:#0f172a; color:#fff; padding:24px; text-align:center; font-size:0.9em }
+    .btn { display:inline-block; background:#22c55e; color:#fff; padding:10px 16px; border-radius:8px; text-decoration:none }
+    .btn:hover { background:#16a34a }
+    .warn { background:#fff7ed; border-color:#fed7aa }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>SafeControl</h1>
+    <p>Система довіри та контролю для малого бізнесу</p>
+    <nav>
+      <a href="#about">Про нас</a>
+      <a href="#check">Чек-листи</a>
+      <a href="#calc">Калькулятор втрат</a>
+      <a href="#contact">Контакти</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section class="card" id="about">
+      <h2>Що таке SafeControl</h2>
+      <p><strong>SafeControl</strong> — це простий набір рішень для власників СТО, сервісів та малих підприємств, які хочуть контролювати фінанси, працівників і запобігати “лівим” заробіткам.</p>
+      <ul>
+        <li>Онлайн Job Card для фіксації робіт</li>
+        <li>Калькулятор потенційних втрат</li>
+        <li>Анонімна форма повідомлень</li>
+        <li>Фото- і відеоконтроль процесів</li>
+      </ul>
+    </section>
+
+    <section class="card" id="check">
+      <h2>Швидкий чек-лист безпеки</h2>
+      <ul>
+        <li>Кожна робота — через Job Card з VIN, фото і підписом клієнта</li>
+        <li>Фото “до/після” ремонту — обов’язково</li>
+        <li>Квитанція клієнту до початку робіт</li>
+        <li>Звірка каси з журналом робіт наприкінці дня</li>
+        <li>Камери на касу, склад і робочі зони</li>
+      </ul>
+    </section>
+
+    <section class="card warn" id="calc">
+      <h2>Калькулятор можливих втрат</h2>
+      <p>Введи приблизні показники, щоб побачити, скільки бізнес може втрачати щомісяця.</p>
+      <label>Кількість авто/день: <input id="cars" type="number" value="5" min="0"></label><br>
+      <label>Середній чек (₴): <input id="avg" type="number" value="1500" min="0"></label><br>
+      <label>“Ліваку”, %: <input id="pct" type="number" value="10" min="0" max="100"></label><br><br>
+      <button class="btn" onclick="calc()">Порахувати</button>
+      <div id="out" style="margin-top:15px;"></div>
+    </section>
+
+    <section class="card" id="contact">
+      <h2>Контакти</h2>
+      <p>📧 <a href="mailto:safecontrol.ua@gmail.com">safecontrol.ua@gmail.com</a></p>
+      <p>Telegram: <a href="https://t.me/">@SafeControl</a></p>
+      <p>© 2025 SafeControl. Усі права захищені.</p>
+    </section>
+  </main>
+
+  <footer>
+    <p>SafeControl — Контроль, довіра, результат.</p>
+  </footer>
+
+  <script>
+    function calc(){
+      const cars = +document.getElementById('cars').value||0;
+      const avg = +document.getElementById('avg').value||0;
+      const pct = (+document.getElementById('pct').value||0)/100;
+      const lossDay = cars*avg*pct;
+      const lossMonth = lossDay*26;
+      document.getElementById('out').innerHTML =
+        "<b>Втрати/день:</b> " + Math.round(lossDay).toLocaleString('uk-UA') + " ₴<br>" +
+        "<b>Втрати/місяць:</b> " + Math.round(lossMonth).toLocaleString('uk-UA') + " ₴";
+    }
+  </script>
+</body>
+</html>
